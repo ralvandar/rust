@@ -874,6 +874,7 @@ extern "rust-intrinsic" {
     /// // the original inner type (`&i32`) to the converted inner type
     /// // (`Option<&i32>`), so read the nomicon pages linked above.
     /// let v_from_raw = unsafe {
+    // FIXME Update this when vec_into_raw_parts is stabilized
     ///     // Ensure the original vector is not dropped.
     ///     let mut v_clone = std::mem::ManuallyDrop::new(v_clone);
     ///     Vec::from_raw_parts(v_clone.as_mut_ptr() as *mut Option<&i32>,
@@ -1339,6 +1340,10 @@ extern "rust-intrinsic" {
     /// Emits a `!nontemporal` store according to LLVM (see their docs).
     /// Probably will never become stable.
     pub fn nontemporal_store<T>(ptr: *mut T, val: T);
+
+    /// See documentation of `<*const T>::offset_from` for details.
+    #[cfg(not(bootstrap))]
+    pub fn ptr_offset_from<T>(ptr: *const T, base: *const T) -> isize;
 }
 
 // Some functions are defined here because they accidentally got made
